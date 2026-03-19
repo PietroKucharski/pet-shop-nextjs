@@ -40,7 +40,9 @@ export const PeriodSection = ({ period }: PeriodSectionProps) => {
           </div>
         </div>
       ) : (
-        <p>Nenhum agendamento para este período</p>
+        <div className="p-4">
+          <p>Nenhum agendamento para este período</p>
+        </div>
       )}
     </section>
   );
