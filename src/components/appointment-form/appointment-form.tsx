@@ -14,15 +14,26 @@ import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Field, FieldError, FieldGroup, FieldLabel } from '../ui/field';
 import { Input } from '../ui/input';
-import { Dog, Phone, User } from 'lucide-react';
+import { CalendarIcon, ChevronDownIcon, Dog, Phone, User } from 'lucide-react';
 import { Textarea } from '../ui/textarea';
 import { IMaskInput } from 'react-imask';
+import { format, startOfDay, startOfToday } from 'date-fns';
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { cn } from '@/lib/utils';
+import { Calendar } from '../ui/calendar';
 
 const appointmentsFormSchema = z.object({
   tutorName: z.string().min(3, 'O nome do tutor é obrigatório'),
   petName: z.string().min(3, 'O nome do pet é obrigatório'),
   phone: z.string().min(11, 'O telefone é obrigatório'),
   description: z.string().min(3, 'A descrição é obrigatória'),
+  scheduleAt: z
+    .date({
+      invalid_type_error: '',
+    })
+    .min(startOfToday(), {
+      message: 'A data não pode ser no passado',
+    }),
 });
 
 type AppointmentsFormValues = z.infer<typeof appointmentsFormSchema>;
@@ -35,6 +46,7 @@ export const AppointmentForm = () => {
       petName: '',
       phone: '',
       description: '',
+      scheduleAt: undefined,
     },
   });
 
@@ -177,6 +189,57 @@ export const AppointmentForm = () => {
                     placeholder="Descrição do serviço"
                     className="resize-none"
                   />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            ></Controller>
+
+            <Controller
+              name="scheduleAt"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field className="flex flex-col">
+                  <FieldLabel
+                    htmlFor={field.name}
+                    className="text-label-medium-size text-content-primary"
+                  >
+                    Data
+                  </FieldLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn(
+                          'w-full justify-between text-left font-normal bg-background-tertiary border-border-primary text-content-primary hover:bg-background-tertiary hover:border-border-secondary hover:text-content-primary focus-visible:ring-offset-0 focus-visible:ring-1 focus-visible:ring-border-brand focus:border-border-brand focus-visible:border-border-brand',
+                          !field.value && 'text-content-secondary'
+                        )}
+                      >
+                        <div className="flex items-center gap-2">
+                          <CalendarIcon
+                            className="text-content-brand"
+                            size={20}
+                          />
+                          {field.value ? (
+                            format(field.value, 'dd/MM/yyyy')
+                          ) : (
+                            <span>Selecione uma data</span>
+                          )}
+                        </div>
+                        <ChevronDownIcon className="opacity-50 h-4 w-4" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) => date < startOfToday()}
+                      />
+                    </PopoverContent>
+                  </Popover>
+
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}
