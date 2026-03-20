@@ -50,9 +50,12 @@ export async function createAppointment(data: AppointmentData) {
 
     revalidatePath('/');
   } catch (error) {
-    console.log(error);
+    console.error(error);
+
+    return {
+      error: 'Erro ao criar o agendamento. Tente novamente',
+    };
   }
-  return;
 }
 
 export async function updateAppointment(id: string, data: AppointmentData) {
@@ -99,6 +102,26 @@ export async function updateAppointment(id: string, data: AppointmentData) {
 
     revalidatePath('/');
   } catch (error) {
-    console.log(error);
+    console.error(error);
+
+    return {
+      error: 'Erro ao atualizar o agendamento. Tente novamente',
+    };
+  }
+}
+
+export async function deleteAppointment(id: string) {
+  try {
+    await prisma.appointment.delete({
+      where: { id },
+    });
+
+    revalidatePath('/');
+  } catch (error) {
+    console.error(error);
+
+    return {
+      error: 'Erro ao remover o agendamento. Tente novamente',
+    };
   }
 }
