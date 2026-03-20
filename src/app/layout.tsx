@@ -1,6 +1,12 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Geist } from 'next/font/google';
 import '../styles/globals.css';
+import { cn } from '@/lib/utils';
+import { Toaster } from 'sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
+import { Header } from '@/components/header/header';
+
+const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 
 const inter = Inter({
   variable: '--font-inter',
@@ -26,9 +32,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className={cn('font-sans', geist.variable)}>
       <body className={`${inter.variable} ${interTight.variable} antialiased`}>
-        {children}
+        <Header />
+        <TooltipProvider>
+          <div className="max-w-3xl mx-auto">
+            <main className="flex flex-1 flex-col mt-12">
+              {children}
+              <Toaster position="top-right" />
+            </main>
+          </div>
+        </TooltipProvider>
       </body>
     </html>
   );
