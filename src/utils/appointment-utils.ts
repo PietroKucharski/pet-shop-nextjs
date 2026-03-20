@@ -17,12 +17,9 @@ export function groupAppointmentsByPeriod(
   const transformedAppointments: Appointment[] = appointments.map(
     (appointment) => ({
       ...appointment,
-      time: appointment.scheduleAt.toLocaleTimeString('pt-BR', {
-        hour: '2-digit',
-        minute: '2-digit',
-      }),
+      time: formatDateTime(appointment.scheduleAt),
       service: appointment.description,
-      period: getPeriod(appointment.scheduleAt.getHours()),
+      period: getPeriod(parseInt(formatDateTime(appointment.scheduleAt))),
     })
   );
 
@@ -70,4 +67,13 @@ export function calculatePeriod(hour: number) {
     isAfternoon,
     isEvening,
   };
+}
+
+export function formatDateTime(date: Date): string {
+  return date.toLocaleTimeString('pt-BR', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    timeZone: 'America/Sao_Paulo',
+  });
 }
