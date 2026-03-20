@@ -4,6 +4,7 @@ import '../styles/globals.css';
 import { cn } from '@/lib/utils';
 import { Toaster } from 'sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
+import { Header } from '@/components/header/header';
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -33,8 +34,15 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn('font-sans', geist.variable)}>
       <body className={`${inter.variable} ${interTight.variable} antialiased`}>
-        <TooltipProvider>{children}</TooltipProvider>
-        <Toaster position="top-right" />
+        <Header />
+        <TooltipProvider>
+          <div className="max-w-3xl mx-auto">
+            <main className="flex flex-1 flex-col mt-12">
+              {children}
+              <Toaster position="top-right" />
+            </main>
+          </div>
+        </TooltipProvider>
       </body>
     </html>
   );
