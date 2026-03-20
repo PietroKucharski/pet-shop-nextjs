@@ -3,6 +3,7 @@ import { Inter, Geist } from 'next/font/google';
 import '../styles/globals.css';
 import { cn } from '@/lib/utils';
 import { Toaster } from 'sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -32,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={cn('font-sans', geist.variable)}>
       <body className={`${inter.variable} ${interTight.variable} antialiased`}>
-        {children}
+        <TooltipProvider>{children}</TooltipProvider>
         <Toaster position="top-right" />
       </body>
     </html>
